@@ -63,7 +63,7 @@ jobs:
           echo "REPOSITORY=$REPOSITORY" >> $GITHUB_ENV
           echo "ISSUE_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
 
-          echo "✅ System prompt prepared for PR #$PR_NUMBER"
+          echo "System prompt prepared for PR #$PR_NUMBER"
 
       - name: Run Claude Dependency Analysis
         id: run_claude
@@ -85,7 +85,7 @@ jobs:
       - name: Verify analysis result
         id: verify_result
         run: |
-          echo "⏳ Waiting for Claude analysis to complete and comment to be posted..."
+          echo "Waiting for Claude analysis to complete and comment to be posted..."
           sleep 10
 
           # Fetch the latest PR comment from Claude
@@ -99,7 +99,7 @@ jobs:
 
           # Check if the comment contains the dependency analysis report
           if echo "$COMMENT" | grep -q "dependency-analysis-report"; then
-            echo "✅ Found dependency analysis report"
+            echo "Found dependency analysis report"
 
             # Extract the recommendation line
             RECOMMENDATION=$(echo "$COMMENT" | grep -E "^\*\*Recommendation\*\*:|^- \*\*Recommendation\*\*:" | head -1)
@@ -108,21 +108,21 @@ jobs:
 
             # Check for REJECT recommendation
             if echo "$RECOMMENDATION" | grep -iq "REJECT"; then
-              echo "::error::❌ Dependency analysis recommends REJECTING this PR"
+              echo "::error::Dependency analysis recommends REJECTING this PR"
               echo "recommendation=REJECT" >> $GITHUB_OUTPUT
               exit 1
             # Check for REVIEW REQUIRED recommendation
             elif echo "$RECOMMENDATION" | grep -iq "REVIEW REQUIRED"; then
-              echo "::warning::⚠️ Dependency analysis recommends REVIEW before merging"
+              echo "::warning::Dependency analysis recommends REVIEW before merging"
               echo "recommendation=REVIEW" >> $GITHUB_OUTPUT
               # Uncomment the line below if you want to fail on REVIEW REQUIRED as well
               # exit 1
             else
-              echo "✅ Dependency analysis approves this PR"
+              echo "Dependency analysis approves this PR"
               echo "recommendation=APPROVE" >> $GITHUB_OUTPUT
             fi
           else
-            echo "::warning::⚠️ Could not find dependency analysis report in comments"
+            echo "::warning::Could not find dependency analysis report in comments"
             echo "Check the PR comments manually for the analysis"
             echo "recommendation=UNKNOWN" >> $GITHUB_OUTPUT
           fi
@@ -132,6 +132,6 @@ jobs:
       - name: Analysis complete
         if: success()
         run: |
-          echo "✅ Dependency analysis completed for PR #${{ steps.get_pr.outputs.pr_number }}"
+          echo "Dependency analysis completed for PR #${{ steps.get_pr.outputs.pr_number }}"
           echo "Recommendation: ${{ steps.verify_result.outputs.recommendation }}"
           echo "Check the PR comments for the detailed analysis report"
