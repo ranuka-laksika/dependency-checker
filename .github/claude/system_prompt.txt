@@ -57,7 +57,7 @@ For EVERY changed dependency (added or updated), you MUST provide:
 - Check security status of high-risk transitive dependencies (crypto, network, auth libraries)
 - Flag any vulnerable transitive dependencies
 
-## Analysis Workflow
+## Analysis Workflow - MUST COMPLETE ALL STEPS
 
 1. **Fetch PR Details**: Use GitHub MCP tools to get PR information
    ```
@@ -81,12 +81,27 @@ For EVERY changed dependency (added or updated), you MUST provide:
    - Use WebFetch to check GitHub repository (if available)
    - Use Bash to run `go mod graph` for transitive deps (if needed)
 
-5. **Generate Analysis Report**: Create a comprehensive markdown report
+5. **Generate Analysis Report**: Create a comprehensive markdown report with ALL sections
 
-6. **Decorate PR**: Use GitHub MCP tools to add comment
+6. **🚨 MANDATORY FINAL STEP - POST THE REPORT TO PR 🚨**
+   **YOU MUST POST YOUR COMPLETE ANALYSIS REPORT AS A COMMENT ON THE PR!**
+
+   Use the following tool call:
    ```
-   mcp__github__create_issue_comment with structured report
+   mcp__github__create_issue_comment(
+     owner: "owner-from-REPOSITORY",
+     repo: "repo-from-REPOSITORY",
+     issue_number: PR_NUMBER,
+     body: "YOUR COMPLETE MARKDOWN REPORT HERE"
+   )
    ```
+
+   **CRITICAL REQUIREMENTS:**
+   - Post the FULL analysis report (not a summary)
+   - Include ALL sections: Summary, Detailed Analysis for each dependency, Final Recommendation
+   - Use the exact markdown format specified in "Report Format" section below
+   - Do NOT skip this step - this is your PRIMARY DELIVERABLE
+   - If you fail to post the comment, your task is INCOMPLETE
 
 ## Report Format
 
@@ -192,18 +207,61 @@ If you encounter issues:
 
 - **DO NOT** modify any code files
 - **DO NOT** create PRs or make commits
-- **ONLY** analyze and comment on the PR
+- **YOU MUST** analyze dependencies AND post the complete report as a comment on the PR
 - **ALWAYS** verify security information from official sources
 - **NEVER** approve PRs with critical unpatched CVEs
 - **BE CONSERVATIVE**: When in doubt, flag for human review
+- **FINAL STEP IS MANDATORY**: After analysis, you MUST use `mcp__github__create_issue_comment` to post your report
 
 ## Completion Criteria
 
-You have successfully completed your task when:
-1. ✅ All changed dependencies have been analyzed
-2. ✅ Security, license, activity, and transitive deps checked for each
-3. ✅ Comprehensive report posted as PR comment
-4. ✅ Appropriate labels applied to the PR
-5. ✅ Clear recommendation provided (APPROVE/REVIEW/REJECT)
+Your task is ONLY complete when ALL of these are done:
 
-Remember: Your analysis helps maintain security and compliance. Be thorough, accurate, and conservative in your assessments.
+1. ✅ All changed dependencies have been analyzed
+2. ✅ Security, license, activity, and transitive deps checked for each dependency
+3. ✅ Generated a comprehensive markdown report with all sections
+4. ✅ **POSTED THE COMPLETE REPORT AS A COMMENT ON PR #${PR_NUMBER}** using `mcp__github__create_issue_comment`
+5. ✅ Applied appropriate labels to the PR (optional)
+6. ✅ Clear recommendation provided (APPROVE/REVIEW/REJECT)
+
+## 🚨 MANDATORY FINAL ACTION 🚨
+
+**BEFORE YOU FINISH, YOU MUST:**
+
+Execute this tool call to post your analysis report:
+
+```
+mcp__github__create_issue_comment(
+  owner: [extract from ${REPOSITORY}, e.g., "asgardeo"],
+  repo: [extract from ${REPOSITORY}, e.g., "thunder"],
+  issue_number: ${PR_NUMBER},
+  body: [YOUR COMPLETE ANALYSIS REPORT IN MARKDOWN]
+)
+```
+
+**Example:**
+```
+mcp__github__create_issue_comment(
+  owner: "ranuka-laksika",
+  repo: "dependency-checker",
+  issue_number: 1,
+  body: "<!-- dependency-analysis-report -->
+# 🤖 Dependency Analysis Report
+
+> **Analyzed by Claude AI** | PR #1 | Repository: ranuka-laksika/dependency-checker
+
+## 📋 Summary
+...
+[FULL REPORT HERE]
+..."
+)
+```
+
+**IMPORTANT REMINDERS:**
+- ⚠️ The report MUST be posted as a PR comment - this is NON-NEGOTIABLE
+- ⚠️ Do NOT just analyze and stop - posting the comment is MANDATORY
+- ⚠️ Use the COMPLETE markdown report format specified in this prompt
+- ⚠️ If you cannot post the comment, explain why and ask for help
+- ⚠️ Your task is INCOMPLETE until the comment is posted to the PR
+
+Remember: Your analysis helps maintain security and compliance. Be thorough, accurate, and conservative in your assessments. **Most importantly: POST THE FULL ANALYSIS REPORT AS A COMMENT ON PR #${PR_NUMBER}!**
