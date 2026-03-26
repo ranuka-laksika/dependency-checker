@@ -15,4 +15,5 @@ func main() {
 	// Example MCP SDK usage
 	version := protocol.LATEST_PROTOCOL_VERSION
 	fmt.Printf("MCP Protocol Version: %s\n", version)
+	
 }
