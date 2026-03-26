@@ -72,6 +72,7 @@ jobs:
           PR_NUMBER: ${{ steps.get_pr.outputs.pr_number }}
           REPOSITORY: ${{ github.repository }}
           ISSUE_NUMBER: ${{ steps.get_pr.outputs.pr_number }}
+          DEBUG: 'true'
         with:
           anthropic_api_key: ${{ secrets.DEPENDENCY_CHECKER_ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.DEPENDENCY_CHECKER_GITHUB_TOKEN }}
@@ -79,6 +80,7 @@ jobs:
           claude_args: |
             --allowedTools "WebFetch,mcp__github__get_pull_request,mcp__github__get_file_contents,mcp__github__create_issue_comment,mcp__github__update_issue,mcp__github__list_commits,mcp__github__search_code,Bash(go:*),Bash(git:*),Read"
             --model claude-sonnet-4-5-20250929
+            --verbose
 
       - name: Analysis complete
         run: |
