@@ -98,7 +98,7 @@ jobs:
           echo "Latest comment received"
 
           # Check if the comment contains the dependency analysis report
-          if echo "$COMMENT" | grep -q "dependency-analysis-report"; then
+          if echo "$COMMENT" | grep -iq "dependency.*analysis.*report"; then
             echo "Found dependency analysis report"
 
             # Extract the recommendation line
